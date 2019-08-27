@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace EventTiming.API.Migrations
+namespace EventTiming.Data.Migrations
 {
-    public partial class initial_identity : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -153,6 +153,72 @@ namespace EventTiming.API.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Event",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    ModifiedDate = table.Column<DateTime>(nullable: false),
+                    CreatedById = table.Column<string>(nullable: true),
+                    ModifiedById = table.Column<string>(nullable: true),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    StartDate = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Event", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Event_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Event_AspNetUsers_ModifiedById",
+                        column: x => x.ModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "EventTimingItem",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    CreatedDate = table.Column<DateTime>(nullable: false),
+                    ModifiedDate = table.Column<DateTime>(nullable: false),
+                    CreatedById = table.Column<string>(nullable: true),
+                    ModifiedById = table.Column<string>(nullable: true),
+                    EventId = table.Column<Guid>(nullable: true),
+                    Start = table.Column<DateTime>(nullable: false),
+                    Finish = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventTimingItem", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EventTimingItem_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_EventTimingItem_Event_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Event",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_EventTimingItem_AspNetUsers_ModifiedById",
+                        column: x => x.ModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -191,6 +257,31 @@ namespace EventTiming.API.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Event_CreatedById",
+                table: "Event",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Event_ModifiedById",
+                table: "Event",
+                column: "ModifiedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EventTimingItem_CreatedById",
+                table: "EventTimingItem",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EventTimingItem_EventId",
+                table: "EventTimingItem",
+                column: "EventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EventTimingItem_ModifiedById",
+                table: "EventTimingItem",
+                column: "ModifiedById");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -211,7 +302,13 @@ namespace EventTiming.API.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "EventTimingItem");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Event");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

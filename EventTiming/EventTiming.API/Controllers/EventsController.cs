@@ -2,17 +2,21 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Threading.Tasks;
 
 namespace EventTiming.API.Controllers
 {
-    [Route("/api/events")]
+    //[Authorize(Policy = "ApiUser")]
     [Authorize]
+    [Route("/api/events")]    
     public class EventsController : Controller
     {
         //http://localhost:54839/api/events?eventid=A89162B9-BF7B-4664-23AB-08D6E4298D7C
         [HttpGet]
-        public IActionResult Get(Guid eventId)
+        public async Task<IActionResult> Get(Guid eventId)
         {
+            var userIdentity = HttpContext.User.Identity;
+
             return Ok(new Event
             {
                 Id = eventId,

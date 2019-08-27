@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace EventTiming.Domain.Base
 {
@@ -7,9 +8,9 @@ namespace EventTiming.Domain.Base
     /// </summary>
     public interface IUserTracking
     {
-        User CreatedBy { get; set; }
-        Guid? CreatedById { get; set; }
-        User ModifiedBy { get; set; }
-        Guid? ModifiedById { get; set; }
+        IdentityUser CreatedBy { get; set; }
+        //Guid? CreatedById { get; set; }
+        IdentityUser ModifiedBy { get; set; }
+        //Guid? ModifiedById { get; set; }
     }
 }
