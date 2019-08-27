@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventTiming.Domain", "Event
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventTiming.Data", "EventTiming.Data\EventTiming.Data.csproj", "{8C7E01E1-5331-4725-8EE2-5F94AD4CCDCC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventTiming.Logic", "EventTiming.Logic\EventTiming.Logic.csproj", "{02512583-03DB-4283-B810-022CF5140627}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{8C7E01E1-5331-4725-8EE2-5F94AD4CCDCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C7E01E1-5331-4725-8EE2-5F94AD4CCDCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C7E01E1-5331-4725-8EE2-5F94AD4CCDCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02512583-03DB-4283-B810-022CF5140627}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02512583-03DB-4283-B810-022CF5140627}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02512583-03DB-4283-B810-022CF5140627}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02512583-03DB-4283-B810-022CF5140627}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

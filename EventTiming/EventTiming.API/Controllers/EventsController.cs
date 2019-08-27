@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace EventTiming.API.Controllers
 {
-    //[Authorize(Policy = "ApiUser")]
     [Authorize]
     [Route("/api/events")]    
     public class EventsController : Controller

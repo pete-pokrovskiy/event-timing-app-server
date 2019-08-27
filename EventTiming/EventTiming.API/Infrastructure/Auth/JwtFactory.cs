@@ -1,5 +1,4 @@
-﻿using EventTiming.API.Models;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -9,7 +8,8 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventTiming.API.Auth
+
+namespace EventTiming.API.Infrastructure.Auth
 {
     public class JwtFactory : IJwtFactory
     {
@@ -18,7 +18,7 @@ namespace EventTiming.API.Auth
         public JwtFactory(IOptions<JwtIssuerOptions> jwtOptions)
         {
             _jwtOptions = jwtOptions.Value;
-            ThrowIfInvalidOptions(_jwtOptions);
+            //ThrowIfInvalidOptions(_jwtOptions);
         }
 
         public async Task<string> GenerateEncodedToken(string userName, ClaimsIdentity identity)
@@ -28,9 +28,10 @@ namespace EventTiming.API.Auth
                  new Claim(JwtRegisteredClaimNames.Sub, userName),
                  new Claim(JwtRegisteredClaimNames.Jti, await _jwtOptions.JtiGenerator()),
                  new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
-                 identity.FindFirst(Helpers.Constants.Strings.JwtClaimIdentifiers.Rol),
-                 identity.FindFirst(Helpers.Constants.Strings.JwtClaimIdentifiers.Id)
-             };
+                 identity.FindFirst(JwtConstants.JwtClaimIdentifiers.Rol),
+                 identity.FindFirst(JwtConstants.JwtClaimIdentifiers.Id),
+                 identity.FindFirst(JwtConstants.JwtClaimIdentifiers.Login)
+            };
 
             // Create the JWT security token and encode it.
             var jwt = new JwtSecurityToken(
@@ -46,13 +47,13 @@ namespace EventTiming.API.Auth
             return encodedJwt;
         }
 
-        public ClaimsIdentity GenerateClaimsIdentity(string userName, string id)
+        public ClaimsIdentity GenerateClaimsIdentity( string id, string login)
         {
-            return new ClaimsIdentity(new GenericIdentity(userName, "Token"), new[]
+            return new ClaimsIdentity(new GenericIdentity(login, "Token"), new[]
             {
-                new Claim(Helpers.Constants.Strings.JwtClaimIdentifiers.Id, id),
-                new Claim(Helpers.Constants.Strings.JwtClaimIdentifiers.Rol, Helpers.Constants.Strings.JwtClaims.ApiAccess)
-            });
+                new Claim(JwtConstants.JwtClaimIdentifiers.Login, login),
+                new Claim(JwtConstants.JwtClaimIdentifiers.Id, id)
+ });
         }
 
         /// <returns>Date converted to seconds since Unix epoch (Jan 1, 1970, midnight UTC).</returns>

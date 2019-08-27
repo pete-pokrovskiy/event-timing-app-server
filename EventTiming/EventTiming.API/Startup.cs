@@ -1,18 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using EventTiming.API.Auth;
-using EventTiming.API.Helpers;
-using EventTiming.API.Models;
+using EventTiming.API.Infrastructure.Auth;
 using EventTiming.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -73,17 +66,22 @@ namespace EventTiming.API
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
             })
-                .AddEntityFrameworkStores<EventTimingDbContext>();
+                    .AddEntityFrameworkStores<EventTimingDbContext>();
+
+            services.AddSingleton<IJwtFactory, JwtFactory>();
+
+            //services.AddScoped<IAuthenticationService, JwtAuthenticationService>();
 
             var jwtAppSettingsOptions = _config.GetSection(nameof(JwtIssuerOptions));
 
-            services.AddSingleton<IJwtFactory, JwtFactory>();
+            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtAppSettingsOptions[nameof(JwtIssuerOptions.SecretKey)]));
+
 
             services.Configure<JwtIssuerOptions>(options =>
             {
                 options.Issuer = jwtAppSettingsOptions[nameof(JwtIssuerOptions.Issuer)];
                 options.Audience = jwtAppSettingsOptions[nameof(JwtIssuerOptions.Audience)];
-                options.SigningCredentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha512);
+                options.SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha512);
             });
 
             var tokenValidationParameters = new TokenValidationParameters
@@ -95,7 +93,7 @@ namespace EventTiming.API
                 ValidAudience = jwtAppSettingsOptions[nameof(JwtIssuerOptions.Audience)],
 
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = _signingKey,
+                IssuerSigningKey = signingKey,
 
                 RequireExpirationTime = false,
                 ValidateLifetime = true,

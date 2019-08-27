@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventTiming.API.Models
+namespace EventTiming.API.Infrastructure.Auth
 {
     public class JwtIssuerOptions
     {
@@ -42,13 +42,13 @@ namespace EventTiming.API.Models
         /// <summary>
         /// Set the timespan the token will be valid for (default is 120 min)
         /// </summary>
-        public TimeSpan ValidFor { get; set; } = TimeSpan.FromMinutes(120);
+        public TimeSpan ValidFor { get; set; } = TimeSpan.FromMinutes(10080);
 
 
 
         /// <summary>
         /// "jti" (JWT ID) Claim (default ID is a GUID)
-        /// </summary>
+        /// </summary>r
         public Func<Task<string>> JtiGenerator =>
           () => Task.FromResult(Guid.NewGuid().ToString());
 
@@ -56,5 +56,6 @@ namespace EventTiming.API.Models
         /// The signing key to use when generating tokens.
         /// </summary>
         public SigningCredentials SigningCredentials { get; set; }
+        public string SecretKey { get; set; }
     }
 }

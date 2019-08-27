@@ -5,11 +5,11 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventTiming.API.Auth
+namespace EventTiming.API.Infrastructure.Auth
 {
     public interface IJwtFactory
     {
         Task<string> GenerateEncodedToken(string userName, ClaimsIdentity identity);
-        ClaimsIdentity GenerateClaimsIdentity(string userName, string id);
+        ClaimsIdentity GenerateClaimsIdentity(string id, string login);
     }
 }
