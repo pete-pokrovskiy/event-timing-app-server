@@ -3,6 +3,6 @@
     public interface IAuthenticationService
     {
         bool IsAuthenticated { get; }
-        string UserLogin { get; }
+        string UserName { get; }
     }
 }

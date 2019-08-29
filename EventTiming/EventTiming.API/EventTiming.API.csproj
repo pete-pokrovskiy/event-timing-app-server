@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\EventTiming.Data\EventTiming.Data.csproj" />
     <ProjectReference Include="..\EventTiming.Domain\EventTiming.Domain.csproj" />
+    <ProjectReference Include="..\EventTiming.Logic\EventTiming.Logic.csproj" />
   </ItemGroup>
 
 </Project>

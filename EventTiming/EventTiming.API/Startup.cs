@@ -2,6 +2,7 @@
 using System.Text;
 using EventTiming.API.Infrastructure.Auth;
 using EventTiming.Data;
+using EventTiming.Logic.Services.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -50,6 +51,8 @@ namespace EventTiming.API
                 );
             });
 
+            services.AddHttpContextAccessor();
+
             services.AddMvc()               
                 .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Latest);
 
@@ -60,6 +63,8 @@ namespace EventTiming.API
                                 .UseLoggerFactory(SqlCommandLoggerFactory)
                                 .EnableSensitiveDataLogging(); ;
             });
+
+            services.AddScoped<IAuthenticationService, JwtAuthenticationService>();
 
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
@@ -119,7 +124,7 @@ namespace EventTiming.API
             //});
 
             services.AddTransient<IEventTimingDbSeeder, EventTimingDbSeeder>();
-
+            services.AddScoped<ICurrentUserDataService, CurrentUserDataService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
