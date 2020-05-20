@@ -19,7 +19,8 @@ namespace EventTiming.Data.Conventions
         {
             foreach (IMutableEntityType entity in modelBuilder.Model.GetEntityTypes())
             {
-                entity.Relational().TableName = entity.DisplayName();
+                // TODO: how to return singular name convention
+                ///entity. Relational().TableName = entity.DisplayName();
             }
         }
     }

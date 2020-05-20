@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace EventTiming.API.Controllers
 {
-    [Authorize]
-    [Route("/api/events")]    
+    //[Authorize]
+    [AllowAnonymous]
+    [Route("/api/v1/events")]    
     public class EventsController : Controller
     {
         //http://localhost:54839/api/events?eventid=A89162B9-BF7B-4664-23AB-08D6E4298D7C
-        [HttpGet]
+        [HttpGet("{eventId}")]
         public async Task<IActionResult> Get(Guid eventId)
         {
             var userIdentity = HttpContext.User.Identity;

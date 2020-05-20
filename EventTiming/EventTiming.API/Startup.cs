@@ -10,27 +10,27 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 
 namespace EventTiming.API
 {
     public class Startup
     {
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
         private readonly IConfiguration _config;
 
         private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"; // todo: get this from somewhere secure
         private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
 
-        public static readonly ILoggerFactory SqlCommandLoggerFactory = new LoggerFactory(new[] {
-            new ConsoleLoggerProvider
-            ((category, level) => (category == DbLoggerCategory.Query.Name || category == DbLoggerCategory.Database.Command.Name
-            || category == DbLoggerCategory.Update.Name)
-        && level == LogLevel.Information, true) });
+        // TODO: починить логирование SQL-запросов
+        //public static readonly ILoggerFactory SqlCommandLoggerFactory = new LoggerFactory(new[] {
+        //    new ConsoleLoggerProvider
+        //    ((category, level) => (category == DbLoggerCategory.Query.Name || category == DbLoggerCategory.Database.Command.Name
+        //    || category == DbLoggerCategory.Update.Name)
+        //&& level == LogLevel.Information, true) });
 
-        public Startup(IHostingEnvironment env, IConfiguration config)
+        public Startup(IWebHostEnvironment env, IConfiguration config)
         {
             _env = env;
             _config = config;
@@ -60,7 +60,7 @@ namespace EventTiming.API
             services.AddDbContext<EventTimingDbContext>(options =>
             {
                 options.UseSqlServer(dbConnectionString)
-                                .UseLoggerFactory(SqlCommandLoggerFactory)
+                                //.UseLoggerFactory(SqlCommandLoggerFactory)
                                 .EnableSensitiveDataLogging(); ;
             });
 
@@ -127,7 +127,7 @@ namespace EventTiming.API
             services.AddScoped<ICurrentUserDataService, CurrentUserDataService>();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -143,7 +143,9 @@ namespace EventTiming.API
 
             app.UseCors("AngularApp");
 
-            app.UseMvc();
+            app.UseRouting();
+
+            app.UseEndpoints(ep => ep.MapControllers());
 
 
             //убедимся, что все миграции накачены
