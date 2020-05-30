@@ -8,4 +8,11 @@
     <Folder Include="Services\Auth\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EventTiming.API.Contract\EventTiming.API.Contract.csproj" />
+    <ProjectReference Include="..\EventTiming.Data\EventTiming.Data.csproj" />
+    <ProjectReference Include="..\EventTiming.Framework\EventTiming.Framework.csproj" />
+    <ProjectReference Include="..\EventTiming.Logic.Contract\EventTiming.Logic.Contract.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.168
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventTiming.API", "EventTiming.API\EventTiming.API.csproj", "{79FF4C7D-0ECF-45BB-B591-AE541ACD5211}"
 EndProject
@@ -9,7 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventTiming.Domain", "Event
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventTiming.Data", "EventTiming.Data\EventTiming.Data.csproj", "{8C7E01E1-5331-4725-8EE2-5F94AD4CCDCC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventTiming.Logic", "EventTiming.Logic\EventTiming.Logic.csproj", "{02512583-03DB-4283-B810-022CF5140627}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventTiming.Logic", "EventTiming.Logic\EventTiming.Logic.csproj", "{02512583-03DB-4283-B810-022CF5140627}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventTiming.API.Contract", "EventTiming.API.Contract\EventTiming.API.Contract.csproj", "{C419B90C-D9FF-41C1-BA63-E13812221FE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventTiming.Framework", "EventTiming.Framework\EventTiming.Framework.csproj", "{5A720B5B-EE35-48BE-9A42-5753AB914860}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventTiming.Logic.Contract", "EventTiming.Logic.Contract\EventTiming.Logic.Contract.csproj", "{B6A4DA4A-CF2C-4329-AD39-F4667044E100}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +39,18 @@ Global
 		{02512583-03DB-4283-B810-022CF5140627}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02512583-03DB-4283-B810-022CF5140627}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02512583-03DB-4283-B810-022CF5140627}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C419B90C-D9FF-41C1-BA63-E13812221FE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C419B90C-D9FF-41C1-BA63-E13812221FE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C419B90C-D9FF-41C1-BA63-E13812221FE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C419B90C-D9FF-41C1-BA63-E13812221FE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A720B5B-EE35-48BE-9A42-5753AB914860}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A720B5B-EE35-48BE-9A42-5753AB914860}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A720B5B-EE35-48BE-9A42-5753AB914860}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A720B5B-EE35-48BE-9A42-5753AB914860}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6A4DA4A-CF2C-4329-AD39-F4667044E100}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6A4DA4A-CF2C-4329-AD39-F4667044E100}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6A4DA4A-CF2C-4329-AD39-F4667044E100}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6A4DA4A-CF2C-4329-AD39-F4667044E100}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

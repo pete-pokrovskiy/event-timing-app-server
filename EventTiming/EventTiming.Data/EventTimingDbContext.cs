@@ -1,6 +1,7 @@
 ﻿using EventTiming.Data.Conventions;
 using EventTiming.Domain;
 using EventTiming.Domain.Base;
+using Humanizer;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -49,8 +50,10 @@ namespace EventTiming.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-
-            modelBuilder.SingularTableNameConvention();
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                entityType.SetTableName(entityType.GetTableName().Singularize());
+            }
 
             base.OnModelCreating(modelBuilder);
         }

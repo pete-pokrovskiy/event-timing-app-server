@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using EventTiming.API.Infrastructure;
 using EventTiming.API.Infrastructure.Auth;
 using EventTiming.Data;
 using EventTiming.Logic.Services.Auth;
@@ -12,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Serialization;
 
 namespace EventTiming.API
 {
@@ -19,9 +21,6 @@ namespace EventTiming.API
     {
         private readonly IWebHostEnvironment _env;
         private readonly IConfiguration _config;
-
-        private const string SecretKey = "iNivDmHLpUA223sqsfhqGbMRdRj1PVkH"; // todo: get this from somewhere secure
-        private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
 
         // TODO: починить логирование SQL-запросов
         //public static readonly ILoggerFactory SqlCommandLoggerFactory = new LoggerFactory(new[] {
@@ -53,8 +52,10 @@ namespace EventTiming.API
 
             services.AddHttpContextAccessor();
 
-            services.AddMvc()               
-                .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Latest);
+            services.AddControllers()
+                .AddNewtonsoftJson(options => {
+                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                });
 
             var dbConnectionString = _config.GetConnectionString("EventTimingAppConnectionString");
             services.AddDbContext<EventTimingDbContext>(options =>
@@ -75,8 +76,7 @@ namespace EventTiming.API
 
             services.AddSingleton<IJwtFactory, JwtFactory>();
 
-            //services.AddScoped<IAuthenticationService, JwtAuthenticationService>();
-
+           
             var jwtAppSettingsOptions = _config.GetSection(nameof(JwtIssuerOptions));
 
             var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtAppSettingsOptions[nameof(JwtIssuerOptions.SecretKey)]));
@@ -123,8 +123,13 @@ namespace EventTiming.API
             //    options.AddPolicy("ApiUser", policy => policy.RequireClaim(Constants.Strings.JwtClaimIdentifiers.Rol, Constants.Strings.JwtClaims.ApiAccess));
             //});
 
+            services.AddTransient<IUow, Uow>();
             services.AddTransient<IEventTimingDbSeeder, EventTimingDbSeeder>();
             services.AddScoped<ICurrentUserDataService, CurrentUserDataService>();
+
+            DependencyInjectionHelper.RegisterCommandDependencies(services);
+
+            DependencyInjectionHelper.RegisterQueryDependencies(services);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -139,14 +144,18 @@ namespace EventTiming.API
             }
 
             app.UseAuthentication();
+
             app.UseHttpsRedirection();
+
+            app.ConfigureCustomExceptionMiddleware();
 
             app.UseCors("AngularApp");
 
             app.UseRouting();
 
-            app.UseEndpoints(ep => ep.MapControllers());
+            app.UseAuthorization();
 
+            app.UseEndpoints(ep => ep.MapControllers());
 
             //убедимся, что все миграции накачены
             using (var scope = app.ApplicationServices.CreateScope())

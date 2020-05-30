@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EventTiming.API.Inputs
 {
-    public class SignInInput
+    public class SignInInput    
     {
         public string Login { get; set; }
         public string Password { get; set; }
