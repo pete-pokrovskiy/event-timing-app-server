@@ -32,23 +32,11 @@ namespace EventTiming.API.Infrastructure.Auth
 
         }
 
-        public bool IsAuthenticated
-        {
-            get
-            {
-                return _identity.IsAuthenticated;
-            }
-        }
-
-        public string UserName
-        {
-            get
-            {
-                return _login;
-            }
-        }
+        public bool IsAuthenticated => _identity.IsAuthenticated;
+        public string UserName => _login;
 
 
+        public IIdentity IdentityUser => _identity;
 
         private ClaimsPrincipal GetUser()
         {

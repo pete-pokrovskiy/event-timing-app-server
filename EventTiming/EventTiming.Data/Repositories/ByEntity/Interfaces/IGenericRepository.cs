@@ -14,9 +14,8 @@ namespace EventTiming.Data.Repositories.Interfaces
         void Delete(Guid id);
         void Delete(TEntity entity);
         void Delete(IEnumerable<TEntity> entity);
-        IEnumerable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate);
-        Task<IEnumerable<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate);
-        IEnumerable<TEntity> FindByWithTracking(Expression<Func<TEntity, bool>> predicate);
+        Task<IEnumerable<TEntity>> FindBy(Expression<Func<TEntity, bool>> predicate);
+        Task<IEnumerable<TEntity>> FindByWithTracking(Expression<Func<TEntity, bool>> predicate);
         IEnumerable<TEntity> FindByInclude(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties);
         Task<IEnumerable<TEntity>> FindByIncludeAsync(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties);
         IEnumerable<TEntity> FindByIncludeWithTracking(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includeProperties);

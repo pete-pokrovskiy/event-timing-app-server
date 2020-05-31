@@ -59,23 +59,16 @@ namespace EventTiming.Data.Repositories
             return includeProperties.Aggregate
               (queryable, (current, includeProperty) => current.Include(includeProperty));
         }
-        public IEnumerable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate)
-        {
-            IEnumerable<TEntity> results = _dbSet.AsNoTracking()
-              .Where(predicate).ToList();
-            return results;
-        }
 
-        public async Task<IEnumerable<TEntity>> FindByAsync(Expression<Func<TEntity, bool>> predicate)
+
+        public async Task<IEnumerable<TEntity>> FindBy(Expression<Func<TEntity, bool>> predicate)
         {
            return await _dbSet.AsNoTracking().Where(predicate).ToListAsync();
         }
 
-        public IEnumerable<TEntity> FindByWithTracking(Expression<Func<TEntity, bool>> predicate)
+        public async Task<IEnumerable<TEntity>> FindByWithTracking(Expression<Func<TEntity, bool>> predicate)
         {
-            IEnumerable<TEntity> results = _dbSet
-              .Where(predicate).ToList();
-            return results;
+            return await _dbSet.AsNoTracking().Where(predicate).ToListAsync();
         }
 
         public TEntity FindByKey(Guid id)

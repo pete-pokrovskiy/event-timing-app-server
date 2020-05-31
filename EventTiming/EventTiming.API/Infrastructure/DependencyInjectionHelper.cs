@@ -11,11 +11,14 @@ namespace EventTiming.API.Infrastructure
         public static void RegisterCommandDependencies(IServiceCollection services)
         {
             services.AddTransient<ICommandHandler<CreateEventCommand>, CreateEventCommandHandler>();
+            services.AddTransient<ICommandHandler<UpdateEventCommand>, UpdateEventCommandHandler>();
+
         }
 
         internal static void RegisterQueryDependencies(IServiceCollection services)
         {
             services.AddTransient<IQueryHandler<GetEventQuery, GetEventQueryResult>, GetEventQueryHandler>();
+            services.AddTransient<IQueryHandler<GetAllEventsQuery, GetAllEventsQueryResult>, GetAllEventsQueryHandler>();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using EventTiming.Data;
 using EventTiming.Logic.Contract.Infra;
+using EventTiming.Logic.Services.Auth;
 using System.Threading.Tasks;
 
 namespace EventTiming.Logic.Infra
@@ -8,12 +9,12 @@ namespace EventTiming.Logic.Infra
             where TCommand : ICommand
     {
         protected readonly IUow _uow;
-        //protected readonly ICurrentUserDataService _currentUserDataService;
+        protected readonly ICurrentUserDataService _currentUserDataService;
 
-        public CommandHandler(IUow uow)//, ICurrentUserDataService currentUserDataService)
+        public CommandHandler(IUow uow, ICurrentUserDataService currentUserDataService)
         {
             _uow = uow;
-           // _currentUserDataService = currentUserDataService;
+           _currentUserDataService = currentUserDataService;
         }
 
         public abstract Task Execute(TCommand command);

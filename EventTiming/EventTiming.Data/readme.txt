@@ -13,3 +13,14 @@ https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/
 Для обновления бд на других стендах нужно выставить на локальной машине переменную окружения ASPNETCORE_ENVIRONMENT с соответствующим значением)
 
 Удаление БД - dotnet ef database drop --startup-project "../EventTiming.API"
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+Для ef 3.1
+
+- dotnet tool install --global dotnet-ef --version 3.0.0
+- nugets for startup project :
+Microsoft.EntityFrameworkCore.SqlServer
+Microsoft.EntityFrameworkCore.Design
+Microsoft.EntityFrameworkCore.Tools

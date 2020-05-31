@@ -18,7 +18,7 @@ namespace EventTiming.API.Infrastructure.Auth
             _userManager = userManager;
             _authService = authService;
 
-            //TODO: перевести в async
+
             CurrentUserData = GetCurrentUserData().Result;
         }
 

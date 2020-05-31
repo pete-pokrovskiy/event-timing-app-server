@@ -20,12 +20,7 @@ namespace EventTiming.Data
             EventRepository = new EventRepository(_context);
         }
 
-        public int Commit()
-        {
-            return _context.SaveChanges();
-        }
-
-        public async Task<int> CommitAsync()
+        public async Task<int> Commit()
         {
             return await _context.SaveChangesAsync();
         }

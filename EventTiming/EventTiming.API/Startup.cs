@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using AutoMapper;
 using EventTiming.API.Infrastructure;
 using EventTiming.API.Infrastructure.Auth;
 using EventTiming.Data;
@@ -51,6 +52,8 @@ namespace EventTiming.API
             });
 
             services.AddHttpContextAccessor();
+
+            services.AddAutoMapper(typeof(Startup));
 
             services.AddControllers()
                 .AddNewtonsoftJson(options => {

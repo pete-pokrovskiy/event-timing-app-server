@@ -6,7 +6,6 @@ namespace EventTiming.Data
     public interface IUow
     {
         IEventRepository EventRepository { get; }
-        int Commit();
-        Task<int> CommitAsync();
+        Task<int> Commit();
     }
 }

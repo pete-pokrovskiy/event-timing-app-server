@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EventTiming.API.Contract
 {
-    public class EventDto
+    public class EventInput
     {
         [Required]
         public string Name { get; set; }

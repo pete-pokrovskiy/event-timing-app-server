@@ -1,5 +1,7 @@
-﻿using EventTiming.API.Contract;
+﻿using AutoMapper;
+using EventTiming.API.Contract;
 using EventTiming.Domain;
+using EventTiming.Logic.Contract.Dto;
 using EventTiming.Logic.Contract.Events;
 using EventTiming.Logic.Contract.Infra;
 using Microsoft.AspNetCore.Authorization;
@@ -14,14 +16,24 @@ namespace EventTiming.API.Controllers
     [Route("/api/v1/events")]    
     public class EventsController : Controller
     {
+        private readonly IMapper _mapper;
         private readonly ICommandHandler<CreateEventCommand> _createEventCommand;
+        private readonly ICommandHandler<UpdateEventCommand> _updateEventCommand;
         private readonly IQueryHandler<GetEventQuery, GetEventQueryResult> _getEventQuery;
+        private readonly IQueryHandler<GetAllEventsQuery, GetAllEventsQueryResult> _getAllEventsQuery;
 
-        public EventsController(ICommandHandler<CreateEventCommand> createEventCommand,
-            IQueryHandler<GetEventQuery, GetEventQueryResult> getEventQuery)
+        public EventsController(
+            IMapper mapper,
+            ICommandHandler<CreateEventCommand> createEventCommand,
+            ICommandHandler<UpdateEventCommand> updateEventCommand,
+            IQueryHandler<GetEventQuery, GetEventQueryResult> getEventQuery,
+            IQueryHandler<GetAllEventsQuery, GetAllEventsQueryResult> getAllEventsQuery)
         {
+            _mapper = mapper;
             _createEventCommand = createEventCommand;
+            _updateEventCommand = updateEventCommand;
             _getEventQuery = getEventQuery;
+            _getAllEventsQuery = getAllEventsQuery;
         }
 
         [HttpGet("{eventId}")]
@@ -32,13 +44,20 @@ namespace EventTiming.API.Controllers
             return Ok(result.Event);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var result = await _getAllEventsQuery.Execute(new GetAllEventsQuery());
+            return Ok(result.Events);
+        }
+
 
         /// <summary>
         /// Создание анкетирования
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult> Create([BindRequired][FromBody] EventDto @event)
+        public async Task<ActionResult> Create([BindRequired][FromBody] EventInput @event)
         {
             if (!ModelState.IsValid)
             {
@@ -66,38 +85,27 @@ namespace EventTiming.API.Controllers
             //}
         }
 
-        ///// <summary>
-        ///// Обновление анетирования
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpPut("{id}")]
-        //public IActionResult Update(Guid id, [BindRequired][FromBody] AppraisalApiUpdateDto appraisalDto)
-        //{
-        //    if (appraisalDto == null || !ModelState.IsValid)
-        //    {
-        //        return BadRequest($"Некорректное входное сообщение. Подробности: {ModelStateHelper.GetErrors(ModelState)}");
-        //    }
+        /// <summary>
+        /// Обновление анетирования
+        /// </summary>
+        /// <returns></returns>
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, [BindRequired][FromBody] EventInput input)
+        {
+            if (input == null || !ModelState.IsValid)
+            {
+                return BadRequest($"Некорректное входное сообщение. Подробности: {ModelStateHelper.GetErrors(ModelState)}");
+            }
 
-        //    var appraisal = _appraisalByFilterQuery.Execute(new AppraisalsByFilterQuery { AppraisalId = id }).Appraisals.FirstOrDefault();
+            await _updateEventCommand.Execute(new UpdateEventCommand
+            {
+                EventId = id,
+                Event = _mapper.Map<EventDto>(input)
+            });
 
-        //    if (appraisal == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var updateCommand = new UpdateAppraisalApiCommand { Appraisal = appraisalDto, AppraisalId = id };
-        //    _updateAppraisalCommand.Execute(updateCommand);
-
-        //    if (!updateCommand.ValidationResult.IsValid)
-        //    {
-        //        return BadRequest(updateCommand.ValidationResult.GetValidationErrors());
-        //    }
-        //    else
-        //    {
-        //        return NoContent();
-        //    }
-
-        //}
+            return Ok();
+           
+        }
 
         ////Используем JSON Patch
         ////Content-Type: application/json-patch+json
@@ -169,44 +177,6 @@ namespace EventTiming.API.Controllers
         //}
 
 
-        ///// <summary>
-        ///// Получение всех анкетирований
-        ///// </summary>
-        ///// <returns></returns>
-        //[HttpGet]
-        //public IActionResult GetAll()
-        //{
-        //    var result = _getQuery.Execute(new GetAppraisalApiQuery());
-        //    return Ok(result.Appraisals);
-        //}
 
-        ///// <summary>
-        ///// Получение данных по идентификатору анкетирования
-        ///// </summary>
-        ///// <param name="id"></param>
-        ///// <returns></returns>
-        //[HttpGet("{id}")]
-        //public IActionResult Get(Guid? id)
-        //{
-        //    if (!id.HasValue)
-        //    {
-        //        return BadRequest("Не передан, либо некорректное значение идентификатора сущности");
-        //    }
-
-        //    //TODO: куда девать проверку на существование сущности?
-        //    var resultRecord = _appraisalByFilterQuery.Execute(new AppraisalsByFilterQuery { AppraisalId = id }).Appraisals.FirstOrDefault();
-
-        //    if (resultRecord == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var result = _getQuery.Execute(new GetAppraisalApiQuery
-        //    {
-        //        AppraisalId = id.Value
-        //    }).Appraisals.First();
-
-        //    return Ok(result);
-        //}
     }
 }
