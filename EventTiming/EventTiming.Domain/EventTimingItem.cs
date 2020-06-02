@@ -10,7 +10,10 @@ namespace EventTiming.Domain
     public class EventTimingItem : Entity
     {
         public Event Event { get; set; }
+        public Guid EventId { get; set; }
+        public string Artist { get; set; }
         public DateTime Start { get; set; }
-        public DateTime Finish { get; set; }
+        public TimeSpan Duration { get; set; }
+        public string Comments { get; set; }
     }
 }

@@ -1,6 +1,6 @@
-﻿using EventTiming.API.Helpers;
+﻿using EventTiming.API.Contract;
+using EventTiming.API.Helpers;
 using EventTiming.API.Infrastructure.Auth;
-using EventTiming.API.Inputs;
 using EventTiming.Logic.Services.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -35,7 +35,7 @@ namespace EventTiming.API.Controllers
 
         [AllowAnonymous]
         [HttpPost("signup")]
-        public async Task<IActionResult> SignUp([FromBody]SignUpInput signUpInput)
+        public async Task<ActionResult> SignUp([FromBody]SignUpInput signUpInput)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid sign up information!");
@@ -64,7 +64,7 @@ namespace EventTiming.API.Controllers
 
         [AllowAnonymous]
         [HttpPost("signin")]
-        public async Task<IActionResult> SignIn([FromBody]SignInInput signInInput)
+        public async Task<ActionResult> SignIn([FromBody]SignInInput signInInput)
         {
             if (signInInput == null || !ModelState.IsValid)
             {
@@ -104,7 +104,7 @@ namespace EventTiming.API.Controllers
         }
 
         [HttpGet("auth")]
-        public async Task<IActionResult> GetCurrentUserData()
+        public async Task<ActionResult> GetCurrentUserData()
         {
             return Ok(new 
             {

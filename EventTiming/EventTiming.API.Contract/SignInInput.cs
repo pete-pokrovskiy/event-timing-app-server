@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventTiming.API.Inputs
+namespace EventTiming.API.Contract
 {
     public class SignInInput    
     {

@@ -19,6 +19,7 @@ namespace EventTiming.API.Controllers
         private readonly IMapper _mapper;
         private readonly ICommandHandler<CreateEventCommand> _createEventCommand;
         private readonly ICommandHandler<UpdateEventCommand> _updateEventCommand;
+        private readonly ICommandHandler<DeleteEventCommand> _deleteEventCommand;
         private readonly IQueryHandler<GetEventQuery, GetEventQueryResult> _getEventQuery;
         private readonly IQueryHandler<GetAllEventsQuery, GetAllEventsQueryResult> _getAllEventsQuery;
 
@@ -26,18 +27,20 @@ namespace EventTiming.API.Controllers
             IMapper mapper,
             ICommandHandler<CreateEventCommand> createEventCommand,
             ICommandHandler<UpdateEventCommand> updateEventCommand,
+            ICommandHandler<DeleteEventCommand> deleteEventCommand,
             IQueryHandler<GetEventQuery, GetEventQueryResult> getEventQuery,
             IQueryHandler<GetAllEventsQuery, GetAllEventsQueryResult> getAllEventsQuery)
         {
             _mapper = mapper;
             _createEventCommand = createEventCommand;
             _updateEventCommand = updateEventCommand;
+            _deleteEventCommand = deleteEventCommand;
             _getEventQuery = getEventQuery;
             _getAllEventsQuery = getAllEventsQuery;
         }
 
         [HttpGet("{eventId}")]
-        public async Task<IActionResult> Get(Guid eventId)
+        public async Task<ActionResult> Get(Guid eventId)
         {
             // TODO: not found result via global exception filter
             var result = await _getEventQuery.Execute(new GetEventQuery { EventId = eventId });
@@ -45,7 +48,7 @@ namespace EventTiming.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult> GetAll()
         {
             var result = await _getAllEventsQuery.Execute(new GetAllEventsQuery());
             return Ok(result.Events);
@@ -85,12 +88,8 @@ namespace EventTiming.API.Controllers
             //}
         }
 
-        /// <summary>
-        /// Обновление анетирования
-        /// </summary>
-        /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [BindRequired][FromBody] EventInput input)
+        public async Task<ActionResult> Update(Guid id, [BindRequired][FromBody] EventInput input)
         {
             if (input == null || !ModelState.IsValid)
             {
@@ -107,76 +106,20 @@ namespace EventTiming.API.Controllers
            
         }
 
-        ////Используем JSON Patch
-        ////Content-Type: application/json-patch+json
-        //[HttpPatch("{id}")]
-        //public IActionResult PartialUpdate(Guid id, [BindRequired][FromBody] JsonPatchDocument<AppraisalApiUpdateDto> appraisalPatchDoc)
-        //{
-        //    if (appraisalPatchDoc == null || !ModelState.IsValid)
-        //    {
-        //        return BadRequest($"Некорректное входное сообщение. Подробности: {ModelStateHelper.GetErrors(ModelState)}");
-        //    }
+        [HttpDelete("{eventId}")]
+        public async Task<ActionResult> Delete(Guid eventId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest($"Некорректное входное сообщение. Подробности: {ModelStateHelper.GetErrors(ModelState)}");
+            }
 
-        //    var dbAppraisal = _appraisalByFilterQuery.Execute(new AppraisalsByFilterQuery { AppraisalId = id }).Appraisals.FirstOrDefault();
+            await _deleteEventCommand.Execute(new DeleteEventCommand
+            {
+                EventId = eventId
+            });
 
-        //    if (dbAppraisal == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    //из объекта БД получаем dto
-        //    var appraisalToPatch = _mapper.Map<AppraisalApiUpdateDto>(dbAppraisal);
-
-        //    //применяем json patch
-        //    appraisalPatchDoc.ApplyTo(appraisalToPatch);
-
-        //    //отправляем полученный объект в команду
-        //    //используем стандартную команду апдейта
-        //    var commandData = new UpdateAppraisalApiCommand
-        //    {
-        //        AppraisalId = id,
-        //        Appraisal = appraisalToPatch
-        //    };
-
-        //    _updateAppraisalCommand.Execute(commandData);
-
-        //    if (!commandData.ValidationResult.IsValid)
-        //    {
-        //        return BadRequest(commandData.ValidationResult.GetValidationErrors());
-        //    }
-        //    else
-        //    {
-        //        return NoContent();
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Удаление анкетировния
-        ///// </summary>
-        ///// <param name="id"></param>
-        ///// <returns></returns>
-        //[HttpDelete("{id}")]
-        //public IActionResult Delete(Guid? id)
-        //{
-        //    if (!id.HasValue)
-        //    {
-        //        return BadRequest("Не передан, либо некорректное значение идентификатора сущности");
-        //    }
-
-        //    var deleteCommand = new DeleteAppraisalApiCommand { AppraisalId = id.Value };
-        //    _deleteAppraisalCommand.Execute(deleteCommand);
-
-        //    if (!deleteCommand.ValidationResult.IsValid)
-        //    {
-        //        return BadRequest(deleteCommand.ValidationResult.GetValidationErrors());
-        //    }
-        //    else
-        //    {
-        //        return NoContent();
-        //    }
-        //}
-
-
-
+            return Ok();
+        }
     }
 }

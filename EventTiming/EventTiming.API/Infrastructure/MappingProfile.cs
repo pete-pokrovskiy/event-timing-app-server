@@ -14,6 +14,7 @@ namespace EventTiming.API.Infrastructure
         public MappingProfile()
         {
             CreateMap<EventInput, EventDto>();
+            CreateMap<EventTimingItemInput, EventTimingItemDto>();
         }
     }
 }

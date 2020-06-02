@@ -13,11 +13,14 @@ namespace EventTiming.Data
 
         public IEventRepository EventRepository { get; }
 
+        public IEventTimingItemRepository EventTimingItemRepository { get; }
+
         public Uow(EventTimingDbContext context)
         {
             _context = context;
 
             EventRepository = new EventRepository(_context);
+            EventTimingItemRepository = new EventTimingItemRepository(_context);
         }
 
         public async Task<int> Commit()

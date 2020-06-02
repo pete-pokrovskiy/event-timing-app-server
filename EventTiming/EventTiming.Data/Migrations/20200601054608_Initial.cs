@@ -191,9 +191,11 @@ namespace EventTiming.Data.Migrations
                     ModifiedDate = table.Column<DateTime>(nullable: false),
                     CreatedById = table.Column<string>(nullable: true),
                     ModifiedById = table.Column<string>(nullable: true),
-                    EventId = table.Column<Guid>(nullable: true),
+                    EventId = table.Column<Guid>(nullable: false),
+                    Artist = table.Column<string>(nullable: true),
                     Start = table.Column<DateTime>(nullable: false),
-                    Finish = table.Column<DateTime>(nullable: false)
+                    Duration = table.Column<TimeSpan>(nullable: false),
+                    Comments = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -209,7 +211,7 @@ namespace EventTiming.Data.Migrations
                         column: x => x.EventId,
                         principalTable: "Event",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_EventTimingItem_AspNetUsers_ModifiedById",
                         column: x => x.ModifiedById,

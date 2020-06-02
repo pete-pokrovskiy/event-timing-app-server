@@ -61,17 +61,23 @@ namespace EventTiming.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Artist")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Comments")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CreatedById")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid?>("EventId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<TimeSpan>("Duration")
+                        .HasColumnType("time");
 
-                    b.Property<DateTime>("Finish")
-                        .HasColumnType("datetime2");
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ModifiedById")
                         .HasColumnType("nvarchar(450)");
@@ -308,7 +314,9 @@ namespace EventTiming.Data.Migrations
 
                     b.HasOne("EventTiming.Domain.Event", "Event")
                         .WithMany("TimingItems")
-                        .HasForeignKey("EventId");
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "ModifiedBy")
                         .WithMany()

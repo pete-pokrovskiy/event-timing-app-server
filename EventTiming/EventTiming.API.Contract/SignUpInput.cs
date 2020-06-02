@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EventTiming.API.Inputs
+namespace EventTiming.API.Contract
 {
     public class SignUpInput
     {
