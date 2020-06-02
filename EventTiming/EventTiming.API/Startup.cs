@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 
 namespace EventTiming.API
@@ -59,6 +60,10 @@ namespace EventTiming.API
                 .AddNewtonsoftJson(options => {
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                 });
+
+            services.AddSwaggerGen(conf => {
+                conf.SwaggerDoc(name: "v1", new OpenApiInfo { Title = "EventTiming API", Version = "v1" });
+            });
 
             var dbConnectionString = _config.GetConnectionString("EventTimingAppConnectionString");
             services.AddDbContext<EventTimingDbContext>(options =>
@@ -145,6 +150,13 @@ namespace EventTiming.API
             {
                 app.UseHsts();
             }
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "EventTiming API v1");
+            });
 
             app.UseAuthentication();
 
