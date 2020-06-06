@@ -26,6 +26,10 @@ namespace EventTiming.Logic.Events.Commands
                 throw new Exception($"Не найдено события с идентификатором {command.EventId}");
             }
 
+            var lastEventTimingItemOrder = (await _uow.EventTimingItemRepository.FindBy(et => et.EventId == eventItem.Id)).OrderBy(et => et.Order)
+                .LastOrDefault()?.Order;
+
+
             command.TimingItem.Id = Guid.NewGuid();
 
             var timingItem = new EventTimingItem
@@ -38,6 +42,7 @@ namespace EventTiming.Logic.Events.Commands
                 Comments = command.TimingItem.Comments,
                 CreatedById = _currentUserDataService.CurrentUserData.Id,
                 ModifiedById = _currentUserDataService.CurrentUserData.Id,
+                Order = lastEventTimingItemOrder.HasValue ? (lastEventTimingItemOrder.Value + 1) : 1
             };
 
             _uow.EventTimingItemRepository.Create(timingItem);

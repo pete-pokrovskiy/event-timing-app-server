@@ -9,6 +9,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\EventTiming.API.Contract\EventTiming.API.Contract.csproj" />
     <ProjectReference Include="..\EventTiming.Data\EventTiming.Data.csproj" />
     <ProjectReference Include="..\EventTiming.Framework\EventTiming.Framework.csproj" />

@@ -4,14 +4,16 @@ using EventTiming.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EventTiming.Data.Migrations
 {
     [DbContext(typeof(EventTimingDbContext))]
-    partial class EventTimingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200606142500_EventTimingItem_add_Order")]
+    partial class EventTimingItem_add_Order
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

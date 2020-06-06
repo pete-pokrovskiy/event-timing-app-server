@@ -1,4 +1,5 @@
-﻿using Croc.CFB.Logic.Queries;
+﻿using AutoMapper;
+using Croc.CFB.Logic.Queries;
 using EventTiming.Data;
 using EventTiming.Logic.Contract.Dto;
 using EventTiming.Logic.Contract.Events;
@@ -13,27 +14,22 @@ namespace EventTiming.Logic.Events.Queries
 {
     public class GetEventTimingItemsQueryHandler : QueryHandler<GetEventTimingItemsQuery, GetEventTimingItemsQueryResult>
     {
-        public GetEventTimingItemsQueryHandler(IUow uow, ICurrentUserDataService currentUserDataService) : base(uow, currentUserDataService)
+        private readonly IMapper _mapper;
+
+        public GetEventTimingItemsQueryHandler(IUow uow, ICurrentUserDataService currentUserDataService,
+            IMapper mapper) : base(uow, currentUserDataService)
         {
+            _mapper = mapper;
         }
 
         public override async Task<GetEventTimingItemsQueryResult> Execute(GetEventTimingItemsQuery query)
         {
             var timingItems = (await _uow.EventTimingItemRepository.FindBy(i => i.CreatedById == _currentUserDataService.CurrentUserData.Id
-            && i.EventId == query.EventId && (!query.Id.HasValue || i.Id == query.Id)));
-
+            && i.EventId == query.EventId && (!query.Id.HasValue || i.Id == query.Id))).ToList();
 
             return new GetEventTimingItemsQueryResult
             {
-                TimingItems = timingItems.Select(t =>  new EventTimingItemDto
-                {
-                    Id = t.Id,
-                    EventId = t.EventId,
-                    Artist = t.Artist,
-                    Start = t.Start,
-                    Duration = t.Duration,
-                    Comments = t.Comments
-                }).ToList()
+                TimingItems = (_mapper.Map<List<EventTimingItemDto>>(timingItems)).OrderBy(et => et.Order)
             };
         }
     }

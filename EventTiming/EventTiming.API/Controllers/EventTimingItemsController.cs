@@ -7,9 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EventTiming.API.Controllers
@@ -20,16 +18,18 @@ namespace EventTiming.API.Controllers
     {
         private readonly IMapper _mapper;
         private readonly ICommandHandler<CreateTimingItemCommand> _createTimingItemCommand;
+        private readonly ICommandHandler<UpdateTimingItemCommand> _updateTimingItemCommand;
         private readonly IQueryHandler<GetEventTimingItemsQuery, GetEventTimingItemsQueryResult> _getEventTimingItemsQuery;
 
         public EventTimingItemsController(IMapper mapper,
             ICommandHandler<CreateTimingItemCommand> createTimingItemCommand,
-
+            ICommandHandler<UpdateTimingItemCommand> updateTimingItemCommand,
             IQueryHandler<GetEventTimingItemsQuery, GetEventTimingItemsQueryResult> getEventTimingItemsQuery
             )
         {
             _mapper = mapper;
             _createTimingItemCommand = createTimingItemCommand;
+            _updateTimingItemCommand = updateTimingItemCommand;
             _getEventTimingItemsQuery = getEventTimingItemsQuery;
         }
 
@@ -90,6 +90,25 @@ namespace EventTiming.API.Controllers
             await _createTimingItemCommand.Execute(createTimingItemCommand);
 
             return Created($"/api/v1/events/{eventId}/items/{createTimingItemCommand.TimingItem.Id}", new { id = createTimingItemCommand.TimingItem.Id });
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Update(Guid eventId, Guid id, [BindRequired][FromBody] EventTimingItemInput input)
+        {
+            if (input == null || !ModelState.IsValid)
+            {
+                return BadRequest($"Некорректное входное сообщение. Подробности: {ModelStateHelper.GetErrors(ModelState)}");
+            }
+
+            await _updateTimingItemCommand.Execute(new UpdateTimingItemCommand
+            {
+                EventId = eventId,
+                TimingItemId = id,
+                TimingItem = _mapper.Map<EventTimingItemDto>(input)
+            });
+
+            return Ok();
+
         }
     }
 }

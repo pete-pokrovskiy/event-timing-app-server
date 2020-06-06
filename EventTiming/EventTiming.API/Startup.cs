@@ -54,7 +54,7 @@ namespace EventTiming.API
 
             services.AddHttpContextAccessor();
 
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(typeof(Startup), typeof(EventTiming.Logic.Infra.LogicMappingProfile));
 
             services.AddControllers()
                 .AddNewtonsoftJson(options => {

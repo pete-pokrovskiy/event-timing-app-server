@@ -10,5 +10,6 @@ namespace EventTiming.Logic.Contract.Dto
         public DateTime Start { get; set; }
         public TimeSpan Duration { get; set; }
         public string Comments { get; set; }
+        public int Order { get; set; }
     }
 }
